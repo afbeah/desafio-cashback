@@ -39,6 +39,10 @@ def init_db():
 
 init_db()
 
+@app.route("/")
+def home():
+    return"API de Cashback funcionando"
+
 @app.route("/cashback", methods=["POST"])
 def cashback():
     data = request.json

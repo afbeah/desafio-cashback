@@ -4,68 +4,277 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Calculadora de Cashback</title>
+
+    <style>
+        *{
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+        body {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 24px;
+            background: linear-gradient(
+                135deg,
+                #0f172a 0% ,
+                #1e3a8a 40%,
+                #3b82f6 100%
+                );
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1100px;
+
+            background: rgba(255, 255, 255, 0.10);
+            border: 1px solid rgba(255, 255, 255, 0.18);
+            backdrop-filter: blur(18px);
+
+            border-radius: 24px;
+            padding: 24px;
+
+            box-shadow: 0 25px 50px rgb(0, 0, 0, 0.25);
+            color: #fff;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 28px;
+        }
+
+        .header h1 {
+            font-size: 2rem;
+            margin-bottom: 28px;
+        }
+
+        .header p {
+            color: rgba(255, 255, 255, 0.85);
+            font-size: 1rem;
+        }
+
+        .content {
+            display: grid;
+            grid-template-columns: 1.1fr 0.9fr;
+            gap: 18px;
+        }
+
+        .card {
+            background: rgb(255, 255, 255, 0.12);
+            border: 1px solid rgba(255, 255, 255, 0.18);
+            border-radius: 18px;
+            padding: 24px;
+        }
+
+        .card h2 {
+            font-size: 1.2rem;
+            margin-bottom: 18px;
+        }
+
+        .form-grid {
+            display: grid;
+            gap: 12px;
+        }
+
+        .field {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .field label {
+            font-size: 0.92rem;
+            font-weight: bold;
+        }
+
+        .field input,
+        .field select {
+            width: 100%;
+            padding: 14px 16px;
+            border: none;
+            outline: none;
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.95);
+            color: #1f2937;
+            font-size: 0.95rem;
+        }
+
+        .field input::placeholder{
+            color: #667280;
+        }
+
+        .button {
+            margin-top: 4px;
+            width: 100%;
+            padding: 12px 16px;
+            border: none;
+            border-radius: 10px;
+            background: linear-gradient(135deg, #0f172a, #2563eb);
+            color: #fff;
+            font-size: 0.98rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: transform 0.2s ease, opacity 0.2s ease;
+        }
+
+        .button:hover {
+            transform: translateY(-2px);
+            opacity: 0.95;
+        }
+
+        .result-box {
+            min-height: 280px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            border-radius: 14px;
+            padding: 14px;
+            background: rgba(255, 255, 255, 0.16);
+            font-size: 1rem;
+            line-height: 1.4;
+        }
+
+        .history-list {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            max-height: 320px;
+            overflow-y: auto;
+            padding-right: 6px;
+        }
+
+        .history-list li {
+            background: rgba(255, 255, 255, 0.14);
+            border: 1px solid rgba(255, 255, 255, 0.16);
+            border-radius: 14px;
+            padding: 14px;
+            line-height: 1.5;
+            color: #f8fafc;
+        }
+
+        .empty-history {
+            color: rgb(255, 255, 255, 0.85);
+            font-size: italic;
+        }
+
+        @media (max-width: 820px) {
+            .content {
+                grid-template-columns: 1fr;
+            }
+            
+            .container {
+                padding: 20px;
+            }
+
+            .header h1 {
+                font-size: 1.6rem;
+            }
+        }
+    </style>
+
 </head>
 <body>
-    <h1>Calculadora de Cashback</h1>
+    <main class="container">
+        <div class="header">
+            <h1>Calculadora de Cashback</h1>
+            <p>Consulte o cashback da compra e visualize o histórico do seu IP</p>
+        </div>
 
-    <label for="tipo">Tipo de cliente:</label>
-    <select id="tipo">
-        <option value="comum">Comum</option>
-        <option value="vip">VIP</option>
-    </select>
+        <section class="content">
+            <div class="card">
+                <h2>Calcular cashback</h2>
 
-    <br><br>
+                <div class="form-grid">
+                    <div class="field">
+                        <label for="tipo">Tipo de cliente</label>
+                        <select id="tipo">
+                            <option value="comum">Comum</option>
+                            <option value="vip">VIP</option>
+                        </select>
+                    </div>
 
-    <label for="valor">Valor da Compra:</label>
-    <input type="number" id="valor" placeholder="Ex: 600">
+                    <div class="field">
+                        <label for="valor">Valor da compra</label>
+                        <input type="number" id="valor" placeholder="Ex: 600" />
+                    </div>
 
-    <br><br>
+                    <div class="field">
+                        <label for="desconto">Desconto (%)</label>
+                        <input type="number" id="desconto" placeholder="Ex: 10">
+                    </div>
 
-    <label for="desconto">Desconto (%):</label>
-    <input type="number" id="desconto" placeholder="Ex: 10">
+                    <button class="button" onclick="calcularCashback()">Calcular cashback</button>
+                </div>
+            </div>
 
-    <br><br>
+            <div class="card">
+                <h2>Resultado</h2>
+                <div class="result-box" id="resultado">
+                    Nenhum cálculo realizado ainda.
+                </div>
+            </div>
 
-    <button onclick="calcularCashback()">Calcular cashback</button>
-
-    <h2>Resultado</h2>
-    <p id="resultado">Nenhum cálculo realizado ainda.</p>
-
-    <h2>Histórico do meu IP</h2>
-    <ul id="historico"></ul>
+            <div class="card" style="grid-column: 1 / -1;">
+                <h2>Histórico do meu IP</h2>
+                <ul id="historico" class="history-list"></ul>
+            </div>
+        </section>
+    </main>
 
     <script>
+        const API_URL = "http://127.0.0.1:5000"
+
         async function calcularCashback(){
             const tipo = document.getElementById("tipo").value;
             const valor = Number(document.getElementById("valor").value);
             const desconto = Number(document.getElementById("desconto").value);
 
-            const resposta = await fetch("http://127.0.0.1:5000/cashback", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify({
-                    tipo_cliente: tipo,
-                    valor: valor,
-                    desconto: desconto
-                })
-            });
+            try {
+                const resposta = await fetch(`${API_URL}/cashback`, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({
+                        tipo_cliente: tipo,
+                        valor: valor,
+                        desconto: desconto
+                    })
+                });
 
-            const dados = await resposta.json();
+                const dados = await resposta.json();
 
-            document.getElementById("resultado").innerText = `Cashback calculado: R$ ${dados.cashback.toFixed(2)}`;
+                if (!resposta.ok) {
+                    document.getElementById("resultado").innerText = `Erro: ${dados.erro || "Falha ao calcular cashback."}`;
+                    return;
+                }
 
-            carregarHistorico();
-
+                document.getElementById("resultado").innerText = `Cashback calculado: R$ ${dados.cashback.toFixed(2)}`;
+                
+                carregarHistorico();
+            } catch(erro) {
+                document.getElementById("resultado").innerText = "Erro ao conectar com backend.";
+                console.error(erro);
+            }
         }
 
         async function carregarHistorico() {
-            const resposta = await fetch("http://127.0.0.1:5000/historico");
+            const resposta = await fetch(`${API_URL}/historico`);
             const dados = await resposta.json(); 
 
             const lista = document.getElementById("historico");
             lista.innerHTML = "";
+
+            if (!dados.length) {
+                lista.innerHTML = '<li class="empty-history">Nenhum histórico encontrado até o momento</li>'
+                return;
+            }
 
             dados.forEach(item => {
                 const li = document.createElement("li");
@@ -76,7 +285,5 @@
 
         carregarHistorico();
     </script>
-
-
 </body>
 </html>

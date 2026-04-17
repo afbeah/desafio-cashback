@@ -23,18 +23,17 @@ Projeto desenvolvido como desafio técnico com o objetivo de simular o cálculo 
 
 ## 🧠 Regra de cálculo
 
-1. Aplicar desconto na compra:
+```python
 valor_final = valor_compra * (1 - desconto / 100)
 
-2. Calcular cashback base:
 cashback_base = valor_final * 0.05
 
-3. Se for VIP:
-+10% sobre o cashback_base
+* Se VIP:
+cashback_total = cashback_base + (cashback_base * 0.10)
 
-4. Se valor_final > 500:
+* Se valor_final > 500:
 cashback_total *= 2
-
+```
 
 ---
 
@@ -98,15 +97,29 @@ python app.py
 ### 3. Rodar o frontend
 ```bash
 cd ../frontend
-py -m http.server 5500
+py -m http.server 5500 --bind 127.0.0.1
 ```
+⚠️ Atenção:
+Caso o terminal exiba o endereço http://[::]:5500, utilize no navegador:
+http://127.0.0.1:5500 ou http://localhost:5500
 
 - Abrir no navegador: http://127.0.0.1:5500
 
+## 🧠 Observação
+
+O frontend consome a API do backend localmente.
+
+Certifique-se de que o backend esteja rodando em:
+http://127.0.0.1:5000
+antes de utilizar o frontend.
+
 ## 📸 Exemplo de uso
-Tipo: Comum
-Valor: 600
-Desconto: 10
+
+```text
+Tipo de cliente: Comum
+Valor da compra: 600
+Desconto: 10%
 
 Resultado: 
  - Cashback: R$ 54.00
+```
